@@ -19,3 +19,13 @@ Y=y+y0;%添加抖动偏移序列后的y方向
 wavename='cmor3-3';
 totalscal=256;
 Fc=centfrq(wavename); % 小波的中心频率
+c=2*Fc*totalscal;
+scals=c./(1:totalscal);
+coefs=cwt(X,scals,wavename); % 求连续小波系数
+figure
+imagesc(t,f,abs(coefs));
+set(gca,'YDir','normal')
+colorbar;
+xlabel('时间 t/s');
+ylabel('频率 f/Hz');
+title('小波时频图');
