@@ -1,0 +1,101 @@
+打开话题列表   rostopic list
+显示话题信息   rostopic echo /话题名
+显示话题频率    rostopic hz  /话题名
+
+/imu/data  惯导信息
+/jackal_velocity_controller/odom   里程计信息
+/odometry/filtered  融合结果
+
+rosbag record /rslidar_points -o data.bag   录制话题信息
+rosbag record -a 记录所有话题
+
+rostopic echo -b xxx.bag -p /话题名   xx.txt
+
+
+激光
+启动 ：roslaunch rslidar_pointcloud rs_lidar_16.launch
+可视化：rviz
+
+基于先验地图的定位方式
+打开地图：roslaunch hdl_localization lidar_localization.launch
+打开激光或数据集
+数据集播放方式：rosbag play xxx.bag
+定位信息 /odom_localization
+
+
+基于carto的定位方式
+打开激光：roslaunch rslidar_pointcloud rs_lidar_16.launch
+进入carto_ws文件夹下编译：catkin_make_isolated --install --use-ninja
+刷新环境：source devel_isolated/setup.bash
+启动launch文件： roslaunch cartographer_ros jackal.launch
+输出的话题信息：/pose_nav
+
+
+激光相对坐标转绝对坐标
+1.打开carto程序
+2.打开websocket ：roslaunch rosbridge_server rosbridge_websocket.launch
+3.手机连接操作
+4.打开
+rosrun target_pub talker
+rostopic echo /asker
+
+
+
+深度相机打开方式
+cd /camera/camport3/sample/build/bin
+sudo ./SimpleView_FetchFrame
+
+网络相机
+
+
+roslaunch hdl_localization lidar_localization.launch
+
+roslaunch rslidar_pointcloud rs_lidar_16.launch
+
+rosbag play data_2020-11-29-15-53-21.bag
+
+rosbag record /rslidar_points -o data.bag
+
+
+pcl_viewer map_005.pcd
+
+rostopic echo /odom_localization
+
+rosrun target_pub talker
+rostopic echo /asker
+roslaunch rosbridge_server rosbridge_websocket.launch
+
+
+
+
+
+启动相机
+swqs@swqs:~$ echo "source ~/camport_ros/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+roslaunch openni2_launch openni2.launch
+ rviz
+https://blog.csdn.net/learning_tortosie/article/details/80887896///
+
+
+rostopic echo /odom_localization
+rosbag record /odom_localization -o zhenzhiimudata.bag
+
+rostopic echo /odom_localization
+rosbag record /odom_localization -o zhenzhinoimudata.bag
+
+rostopic echo /pose_nav
+rosbag record /pose_nav -o imudata.bag
+
+rostopic echo /pose_nav
+rosbag record /pose_nav -o noimudata.bag
+roslaunch rosbridge_server rosbridge_websocket.launch
+rostopic echo -b ...bag -p/pose_nav>,,.txt
+
+roslaunch xsens_mti_driver xsens_mti_node.launch
+
+cartographer
+catkin_make_isolated --install --use-ninja
+source devel_isolated/setup.bash
+ roslaunch cartographer_ros jackal.launch
+rosrun rqt_tf_tree rqt_tf_tree
+

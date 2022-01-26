@@ -1,0 +1,94 @@
+～～ubuntu18.04 安装ROS Melodic
+**设置软件源：(需要先将软件和更新设置为清华源)
+sudo sh -c '. /etc/lsb-release && echo "deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list'
+
+**设置密匙：
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654
+
+**安装：
+sudo apt-get update
+sudo apt-get install ros-melodic-desktop-full
+sudo apt-get install ros-melodic-rqt*
+
+**初始化rosdep:
+sudo rosdep init  
+(若报错,则：  sudo mkdir -p /etc/ros/rosdep/sources.list.d，然后再 sudo rosdep init)
+rosdep update
+
+**环境配置：
+echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+**安装rosinstall:
+sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential
+
+**测试：
+roscore
+rosrun turtlesim turtlesim_node
+rosrun turtlesim turtle_teleop_key
+
+**ROS的卸载：
+sudo apt-get purge ros-*
+sudo rm -rf /etc/ros
+sudo gedit ~/.bashrc #然后，删除其中关于ros的环境变量
+
+
+mkdir -p catkin_ws/src
+cd catkin_ws/src/
+catkin_init_workspace
+cd ..
+catkin_make
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+～～vlp16 
+**报错，缺少pcap库（sudo apt-get install libpcap-dev）
+**Dataport:2368 
+**IP:192.168.0.201
+
+～～hokuyo:
+urg_node-indigo-devel;;urg_c;;laser_proc
+roslaunch urg_node urg_lidar_left.launch
+
+**安装MTI710  (MT_Software_Suite_linux-x64_2019.0.1;;;xsens_ros_mti_driver)
+  在catkin_ws下   pushd src/xsens_ros_mti_driver/lib/xspublic && make && popd 
+  然后  catkin_make
+
+～～cartographer:
+sudo apt-get install -y python-wstool python-rosdep ninja-build   (安装ninja)
+mkdir catkin_ctg
+cd catkin_ctg
+wstool init src
+cartographer cartographer_ros ceres-solver
+wstool update -t src
+rosdep install --from-paths src --ignore-src --rosdistro=${melodic} -y
+catkin_make_isolated --install --use-ninja
+source install_isolated/setup.bash
+gedit ~/.bashrc
+source ~/catkin_ctg/devel_isolated/setup.bash
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+
+～～docker :
+sudo apt-get remove docker docker-engine docker-ce docker.io
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu artful stable" 
+sudo apt-get update
+sudo apt-get install -y docker-ce
+sudo docker version
+
+～～imu gravity_vector   (imu_tracker.cc)
+
+ls /dev/ttyUSB*
+sudo chmod 777 /dev/ttyUSB*
+sudo chmod 777 *
+
+sudo apt-get install cutecom安装串口助手
+
+robosen 16线激光ip:192.168.1.200   电脑ip：192.168.1.102
+
+sudo apt-get install ros-melodic-teleop-t*
+sudo apt-get install ros-melodic-rosserial-server
+sudo apt-get install ros-melodic-nmea-msgs
